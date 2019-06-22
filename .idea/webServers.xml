@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="WebServers">
+    <option name="servers">
+      <webServer id="925083b9-ced2-4bbc-bedf-964e2ceab2d8" name="laravel_leam_git" url="http://192.168.59.132">
+        <fileTransfer host="192.168.59.132" port="22" accessType="SFTP" username="nginx">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" />
+          </advancedOptions>
+        </fileTransfer>
+      </webServer>
+    </option>
+  </component>
+</project>
