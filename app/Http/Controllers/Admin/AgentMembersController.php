@@ -144,5 +144,9 @@ class AgentMembersController extends Controller
         $cityList = AgentMembersService::getUsCities($state_id);
         return response()->json($cityList);
     }
-
+    //代理关系
+    public function children_relation(){
+//        dd(123);
+        return view('admin.agentmembers.children_relation');
+    }
 }

@@ -74,3 +74,4 @@ Route::post('agentmembers/save', 'AgentMembersController@save')->name('agentmemb
 Route::get('agentmembers/remove', 'AgentMembersController@remove')->name('agentmembers-remove');
 Route::get('agentmembers/check', 'AgentMembersController@check')->name('agentmembers-check');
 Route::get('agentmembers/getcitylist', 'AgentMembersController@getCityList')->name('agentmembers-getcitylist');
+Route::any('agentmembers/children_relation', 'AgentMembersController@children_relation')->name('agentmembers-children-relation');

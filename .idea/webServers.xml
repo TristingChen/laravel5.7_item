@@ -3,7 +3,7 @@
   <component name="WebServers">
     <option name="servers">
       <webServer id="925083b9-ced2-4bbc-bedf-964e2ceab2d8" name="laravel_leam_git" url="http://192.168.59.132">
-        <fileTransfer host="192.168.59.132" port="22" accessType="SFTP" username="nginx">
+        <fileTransfer host="192.168.59.132" port="22" accessType="SFTP" password="dfcbdfd9dfdadf81df98df99df9bdf99df9cdf99" username="nginx">
           <advancedOptions>
             <advancedOptions dataProtectionLevel="Private" />
           </advancedOptions>
