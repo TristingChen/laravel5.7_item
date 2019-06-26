@@ -75,3 +75,4 @@ Route::get('agentmembers/remove', 'AgentMembersController@remove')->name('agentm
 Route::get('agentmembers/check', 'AgentMembersController@check')->name('agentmembers-check');
 Route::get('agentmembers/getcitylist', 'AgentMembersController@getCityList')->name('agentmembers-getcitylist');
 Route::any('agentmembers/children_relation', 'AgentMembersController@children_relation')->name('agentmembers-children-relation');
+Route::any('agentmembers/children_relation_json', 'AgentMembersController@children_relation_json')->name('agentmembers-children-relation-json');

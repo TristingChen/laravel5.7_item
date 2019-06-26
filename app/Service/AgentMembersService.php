@@ -13,6 +13,7 @@ class AgentMembersService
 {
     protected static $col_info = [
         'id'=>0,
+        'pid'=>0,
         'name'=>'',
         'password'=>'',
         'email'=>'',
@@ -47,6 +48,25 @@ class AgentMembersService
 
         return $dataLists;
     }
+    public static  function getAllagents(){
+        $dataLists = DB::table('xc_agent_members as t1') ->leftJoin('xc_us_cities as t2','t1.city_id','=','t2.ID')
+            ->leftJoin('xc_us_states as t3','t2.ID_STATE','=','t3.ID')
+            ->leftJoin('xc_agent_roles as t4','t1.agent_role_id','=','t4.id')
+            ->select(DB::raw('t1.*,t4.agent_name,concat_ws("/",t2.CITY,t3.STATE_NAME) as city_info'))
+            ->where('t1.deleted','=',0)
+            ->orderBy('t1.created_at', 'desc')
+            ->get();
+        $data = [];
+        if($dataLists){
+            foreach($dataLists as $key => $value){
+                $data[$key]['id'] = $value->id;
+                $data[$key]['userinfo'] =$value->name.'-'.$value->city_info.'-'.$value->tel;
+            }
+        }
+        unset($dataLists);
+        return $data;
+    }
+
     //查找美国的州
     public static function getUsStates(){
         $dataLists = DB::table('xc_us_states')->select(['ID','STATE_NAME'])->get();
@@ -110,4 +130,64 @@ class AgentMembersService
         return $result;
     }
 
+    public static function checkpidRight($role_id,$pid){
+        $role_child = DB::table('xc_agent_roles')->where('id','=',$pid)->value('role_child');
+        if(!in_array($role_id,explode(',',$role_child))){
+            return false;
+        };
+        return true;
+    }
+
+    public static function getAllChildren($id= 0){
+        $dataLists = DB::table('xc_agent_members as t1')
+            ->leftJoin('xc_agent_roles as t2','t1.agent_role_id','=','t2.id')
+            ->select(DB::raw('t1.id,concat_ws("--",t1.name,t2.agent_name) as title,t1.pid'))
+            ->where('t1.deleted','=',0)
+            ->orderBy('t1.created_at', 'desc')
+            ->get()->toArray();
+        /*
+        *2.获取某个会员的无限下级方法
+        *$members是所有会员数据表,$mid是用户的id
+        */
+        function GetTeamMember($members, $mid) {
+            $Teams=array();//最终结果
+            $mids=array($mid);//第一次执行时候的用户id
+            do {
+                $othermids=array();
+                $state=false;
+                foreach ($mids as $valueone) {
+                    foreach ($members as $key => $valuetwo) {
+                        if($valuetwo->pid==$valueone){
+                            $Teams[$valuetwo->id]= (array)$valuetwo;//找到我的下级立即添加到最终结果中
+                            $othermids[]=$valuetwo->id;//将我的下级id保存起来用来下轮循环他的下级
+                            array_splice($members,$key,1);//从所有会员中删除他
+                            $state=true;
+                        }
+                    }
+                }
+                $mids=$othermids;//foreach中找到的我的下级集合,用来下次循环
+            } while ($state==true);
+
+            return $Teams;
+        }
+        $child_all = GetTeamMember($dataLists,$id);
+        if($child_all){
+            foreach($child_all as $key => $value){
+                $child_all[$key]['spread'] = true;
+            }
+        }
+        function generateTree($items){
+            $tree = array();
+            foreach($items as $item){
+                if(isset($items[$item['pid']])){
+                   $items[$item['pid']]['children'][] = &$items[$item['id']];
+                }else{
+                    $tree[] = &$items[$item['id']];
+            }
+        }
+            return $tree;
+        }
+        $child_tree = generateTree($child_all);
+        return $child_tree;
+    }
 }

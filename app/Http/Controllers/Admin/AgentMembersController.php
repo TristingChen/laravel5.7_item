@@ -45,10 +45,12 @@ class AgentMembersController extends Controller
         $dataInfo =AgentMembersService::getAgentMember();
         $statesInfo = AgentMembersService::getUsStates();
         $cities = AgentMembersService::getUsCities($dataInfo->state_id);
+        $getAllagents = AgentMembersService::getAllagents();
         return view('admin.agentmembers.edit',[
             'dataInfo'=>$dataInfo,
             'statesInfo'=>$statesInfo,
             'cityInfo'=>$cities,
+            'getAllagents'=>$getAllagents,
             'allRoles'=>AgentMembersService::getAgentMemberRoles()
         ]);
     }
@@ -58,10 +60,12 @@ class AgentMembersController extends Controller
         $dataInfo =AgentMembersService::getAgentMember($agent_member_id);
         $statesInfo = AgentMembersService::getUsStates();
         $cities = AgentMembersService::getUsCities($dataInfo->state_id);
+        $getAllagents = AgentMembersService::getAllagents();
         return view('admin.agentmembers.edit',[
             'dataInfo'=>$dataInfo,
             'statesInfo'=>$statesInfo,
             'cityInfo'=>$cities,
+            'getAllagents'=>$getAllagents,
             'allRoles'=>AgentMembersService::getAgentMemberRoles()
 
         ]);
@@ -92,10 +96,22 @@ class AgentMembersController extends Controller
                 echo json_encode(['code'=>0,'data'=>[],'msg'=>'州与市必填'] );exit;
             }
         }
+
         if($validator->fails()){
             echo json_encode(['code'=>0,'data'=>[],'msg'=>$messages->first()] );exit;
         }
+
         $param['agent_role_id'] = intval($request->input('agent_role_id'),0);
+        $param['pid'] = intval($request->input('pid'),0);
+
+        //判断有无代理归属 如有则进行判断是否角色与州满足条件
+        if($param['pid']){
+            $checkPid = AgentMembersService::checkpidRight($param['agent_role_id'], $param['pid']);
+            if(!$checkPid){
+                echo json_encode(['code'=>0,'data'=>[],'msg'=>'请检查代理归属的代理关系是否正确'] );exit;
+            }
+        }
+
         $param['name'] = trim($request->input('name'),0);
         $param['password'] = md5(md5(trim($request->input('password'),0)));
         $param['tel'] = trim($request->input('tel'),0);
@@ -144,9 +160,27 @@ class AgentMembersController extends Controller
         $cityList = AgentMembersService::getUsCities($state_id);
         return response()->json($cityList);
     }
-    //代理关系
-    public function children_relation(){
-//        dd(123);
-        return view('admin.agentmembers.children_relation');
+    //下级代理关系
+    public function children_relation(Request $request){
+        $id =  intval($request->input('id',0));
+        if(!$id){
+            die('参数传递错误');
+        }
+        $the_agent = AgentMembersService::getAgentMember($id);
+        return view('admin.agentmembers.children_relation',[
+            'id'=>$id,
+            'the_agent'=>$the_agent
+        ]);
     }
+
+    public function children_relation_json(Request $request){
+        //查找全部的子代
+        $id =  intval($request->input('id',0));
+        if(!$id){
+            die('参数传递错误');
+        }
+        $child_tree =AgentMembersService::getAllChildren($id);
+        echo json_encode($child_tree);
+    }
+
 }
