@@ -1,4 +1,11 @@
 @extends('admin.layout')
+<style>
+    .layui-table-cell{
+        height: inherit !important;
+        word-break: break-all !important;
+        white-space: normal !important;
+    }
+</style>
 @section('content')
 
     <div class="layui-row">
@@ -26,6 +33,13 @@
         </form>
     </div>
     <table class="layui-table  text-center" lay-filter="demo" id="demo" lay-size="lg"></table>
+    <script type="text/html" id="toolbarDemo">
+        <div class="layui-btn-container">
+            <a class="layui-btn layui-btn-normal layui-btn-sm" href="{{route('agentmembers-add')}}"><i class="layui-icon">&#xe61f;</i> 添加代理</a>
+            {{--<button class="layui-btn layui-btn-normal layui-btn-sm ajax-form" data-url="{{route('agentmembers-add')}}" title="添加代理"><i class="layui-icon">&#xe61f;</i> 添加代理</button>--}}
+            <button class="layui-btn layui-btn-sm" id="allChecked" lay-event="allChecked"><i class="layui-icon">&#xe640;</i>批量删除</button>
+        </div>
+    </script>
     @endsection
     <div class="layui-form-item" id="checked_modal" style="display: none;">
         <div class="layui-inline">
@@ -78,7 +92,6 @@
                 var data = obj.data;
                 //删除
                 var _id = data.id;
-
                 if(obj.event === 'remove'){
                     var removeUrl = "{{ route('agentmembers-remove') }}";
                     layer.confirm('您是确认要删除该会员？', {
@@ -101,10 +114,9 @@
                             }
                         });
                     });
-                }else if(obj.event = 'edit'){
+                }else if(obj.event == 'edit'){
                     window.location = "{{route('agentmembers-edit')}}?id="+_id;
-                }else if(obj.event = 'checked'){
-                    console.log(123)
+                }else if(obj.event == 'checked'){
                     layer.prompt({
                         formType: 2
                         ,title: '修改 ID 为 ['+ data.id +'] 的用户签名'
@@ -119,6 +131,9 @@
                             sign: value
                         });
                     });
+                }else if(obj.event == 'children_relation'){
+
+                    window.location = "{{route('agentmembers-children-relation')}}?id="+_id;
                 }
             });
         });
@@ -127,24 +142,22 @@
 
     </script>
     <script type="text/html" id="barEdit">
+        <a class="layui-btn layui-btn-xs" lay-event="children_relation">下级</a>
         <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
         <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="remove">删除</a>
         <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="checked">审核</a>
     </script>
-    <script type="text/html" id="toolbarDemo">
-        <div class="layui-btn-container">
-            <a class="layui-btn layui-btn-normal layui-btn-sm" href="{{route('agentmembers-add')}}"><i class="layui-icon">&#xe61f;</i> 添加代理</a>
-            {{--<button class="layui-btn layui-btn-normal layui-btn-sm ajax-form" data-url="{{route('agentmembers-add')}}" title="添加代理"><i class="layui-icon">&#xe61f;</i> 添加代理</button>--}}
-            <button class="layui-btn layui-btn-sm" id="allChecked" lay-event="allChecked"><i class="layui-icon">&#xe640;</i>批量删除</button>
-        </div>
-    </script>
+
     <script type="text/html" id="sexTpl">
+
         @verbatim
-        {{#  if(d.checked === '0'){ }}
-        <span style="color: #F581B1;font-weight: bolder;">未审核</span>
-        {{#  } else if(d.checked === '1'){ }}
-        <span style="color: #FF5722;font-weight: bolder;">审核通过</span>
+
+        {{#  if(d.checked == '0'){ }}
+        <span style="color: grey;font-weight: bolder;">未审核</span>
+        {{#  } else if(d.checked == '1'){ }}
+        <span style="color: #1e9fff;font-weight: bolder;">审核通过</span>
         {{#  } else{ }}
+
         <span style="color: #c1e2b3;font-weight: bolder;">审核不通过</span>
         {{#  } }}
         @endverbatim
