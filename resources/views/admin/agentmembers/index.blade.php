@@ -9,12 +9,12 @@
 @section('content')
 
     <div class="layui-row">
-            <form action="" class="layui-form">
+            <form  class="layui-form">
                 <div class="layui-form-item">
                     <div class="layui-inline">
-                        <label class="layui-form-label">审核状态</label>
-                        <div class="layui-input-inline" >
-                            <select name="checked"  >
+                            <label class="layui-form-label">审核状态</label>
+                        <div class="layui-input-inline">
+                            <select name="checked" id="checked"  >
                                 <option value="-1"  selected='selected'  >请选择</option>
                                 <option value="0"  selected='selected' >未审核</option>
                                 <option value="1"  selected='selected'  >审核通过</option>
@@ -23,11 +23,10 @@
                         </div>
                     </div>
                     <div class="layui-inline">
-                        <input type="text" name="keywords" style=""  class="form-control" value=""  placeholder="请输入搜索关键字">
-                     <span class="input-group-btn">
-                            <button type="submit" class="btn btn-info" id="search-btn"><i class="icon icon-search"></i> 搜索</button>
-                    </span>
-
+                        <input type="text" name="keywords" id="keywords" style=""  class="layui-input" value=""  placeholder="请输入搜索关键字">
+                    </div>
+                    <div class="layui-inline">
+                        <button class="layui-btn layui-btn-normal" onclick="return false;" data-type="reload" id="selectbyCondition" >搜索</button>
                     </div>
                 </div>
         </form>
@@ -78,6 +77,30 @@
                 ]]
                 ,page: true
             });
+            //根据条件查询表格数据重新加载
+            var $ = layui.$, active = {
+                reload: function(){
+                    //获取审核状态
+                    //执行重载
+                    table.reload('demo', {
+                        page: {
+                            curr: 1 //重新从第 1 页开始
+                        }
+                        //根据条件查询
+                        ,where: {
+                            checked:$('#checked option:selected').val(),
+                            keywords:$('#keywords').val()
+                        }
+                    });
+                }
+            };
+            //搜索
+            $('#selectbyCondition').on('click',function(){
+                        var type = $(this).data('type');
+                        active[type] ? active[type].call(this) : '';
+            });
+
+
             //监听头部工具条事件
             $("#allChecked").click(function () {
                 var checkStatus = table.checkStatus('demo')
@@ -132,7 +155,6 @@
                         });
                     });
                 }else if(obj.event == 'children_relation'){
-
                     window.location = "{{route('agentmembers-children-relation')}}?id="+_id;
                 }
             });
@@ -142,7 +164,7 @@
 
     </script>
     <script type="text/html" id="barEdit">
-        <a class="layui-btn layui-btn-xs" lay-event="children_relation">下级</a>
+        <a class="layui-btn layui-btn-xs layui-btn-normal  ajax-form" lay-event="children_relation">下级</a>
         <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
         <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="remove">删除</a>
         <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="checked">审核</a>

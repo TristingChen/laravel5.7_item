@@ -82,7 +82,7 @@ class AgentMembersService
     public static function getAgentMember($agent_member_id = 0){
         if($agent_member_id){
             //编辑用户的查找
-            $dataInfo = DB::table('xc_agent_members as t1')->leftJoin('xc_us_cities as t2','t1.city_id','=','t2.ID')->select(['t1.*','t2.ID_STATE as state_id'])->first();
+            $dataInfo = DB::table('xc_agent_members as t1')->leftJoin('xc_us_cities as t2','t1.city_id','=','t2.ID')->select(['t1.*','t2.ID_STATE as state_id'])->where('t1.id','=',$agent_member_id)->first();
         }else{
             //添加用户信息的查找
             $dataInfo = (object)self::$col_info;
