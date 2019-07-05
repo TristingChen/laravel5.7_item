@@ -34,7 +34,7 @@
     <table class="layui-table  text-center" lay-filter="demo" id="demo" lay-size="lg"></table>
     <script type="text/html" id="toolbarDemo">
         <div class="layui-btn-container">
-            <a class="layui-btn layui-btn-normal layui-btn-sm" href="{{route('agentmembers-add')}}"><i class="layui-icon">&#xe61f;</i> 添加代理</a>
+            <a class="layui-btn layui-btn-normal layui-btn-sm" href="{{route('resourcemanage-add')}}"><i class="layui-icon">&#xe61f;</i> 添加资源</a>
             {{--<button class="layui-btn layui-btn-normal layui-btn-sm ajax-form" data-url="{{route('agentmembers-add')}}" title="添加代理"><i class="layui-icon">&#xe61f;</i> 添加代理</button>--}}
             <button class="layui-btn layui-btn-sm" id="allChecked" lay-event="allChecked"><i class="layui-icon">&#xe640;</i>批量删除</button>
         </div>
@@ -58,20 +58,14 @@
             var table = layui.table;
             table.render({
                 elem: '.layui-table'
-                ,url:'{{route("agentmembers-index-json")}}'
+                ,url:'{{route("resourcemanage-index-json")}}'
                 ,cellMinWidth: 80 //全局定义常规单元格的最小宽度，layui 2.2.1 新增
                 ,toolbar: '#toolbarDemo'
                 ,cols: [[
                     {type:'checkbox'}
                     ,{field:'id', width:80, title: 'ID', sort: true}
-                    ,{field:'name', width:80, title: '用户名'}
-                    ,{field:'email', width:80, title: '邮箱', sort: true}
-                    ,{field:'tel', width:80, title: '电话'}
-                    ,{field:'agent_name', title: '角色'} //minWidth：局部定义当前单元格的最小宽度，layui 2.2.1 新增
-                    ,{field:'country', title: '国家', sort: true}
-                    ,{field:'city_info', title: '城市'}
-                    ,{field:'detail_address', title: '地址'}
-                    ,{field:'created_at', title: '注册时间'}
+                    ,{field:'title', width:80, title: '标题'}
+                    ,{field:'content', width:260, title: '描述', sort: true}
                     ,{field:'checked', title: '审核状态',templet: '#sexTpl'}
                     ,{field:'wealth', title:'操作',width:137, toolbar: '#barEdit'}
                 ]]
@@ -114,7 +108,7 @@
                     layer.msg('请先选择栏目')
                     return false;
                 }
-                var removeUrl = "{{ route('agentmembers-remove') }}";
+                var removeUrl = "{{ route('resourcemanage-remove') }}";
                 layer.confirm('您是确认要删除该栏目吗？', {
                     btn: ['确认', '取消']
                 }, function() {
@@ -135,14 +129,15 @@
                         }
                     });
                 });
+                //进行选中用户批量的审核
             })
             table.on('tool(demo)', function(obj){
                 var data = obj.data;
                 //删除
                 var _id = data.id;
                 if(obj.event === 'remove'){
-                    var removeUrl = "{{ route('agentmembers-remove') }}";
-                    layer.confirm('您是确认要删除该会员？', {
+                    var removeUrl = "{{ route('resourcemanage-remove') }}";
+                    layer.confirm('您是确认要删除该栏目吗？', {
                         btn: ['确认', '取消']
                     }, function() {
                         $.ajax({
@@ -153,7 +148,7 @@
                             success: function (response) {
                                 layer.msg(response.msg);
                                 if(response.code == 1){
-                                    window.reload();
+                                    window.location.reload();
 
                                 }
                             },
@@ -163,7 +158,7 @@
                         });
                     });
                 }else if(obj.event == 'edit'){
-                    window.location = "{{route('agentmembers-edit')}}?id="+_id;
+                    window.location = "{{route('resourcemanage-edit')}}?id="+_id;
                 }else if(obj.event == 'checked'){
                     layer.open({
                         type: 1
@@ -174,27 +169,27 @@
                         ,maxmin: true
                         ,content:$("#checked_modal")
                         ,success:function(layero,index){
-                            console.log(layero)
+                           console.log(layero)
                         }
                         ,yes:function(layero,index){
                             var _checked = $('input[name="checked"]:checked').val();
                             $.ajax({
                                 type: "GET",
-                                url: "{{route('agentmembers-checked')}}",
+                                url: "{{route('resourcemanage-checked')}}",
                                 data: { 'id': _id,'checked':_checked},
                                 dataType: "json",
                                 success: function (response) {
                                     layer.msg(response.msg);
                                     if(response.code == 1){
-                                        layer.alert('操作完成',{icon:1,title:'提示'},function(i){
-                                            layer.close(i);
-                                            layer.close(layero);//关闭弹出层
-                                        })
-                                        table.reload('demo',{//重载表格
-                                            page:{
-                                                curr:1
-                                            }
-                                        })
+                                            layer.alert('操作完成',{icon:1,title:'提示'},function(i){
+                                                layer.close(i);
+                                                layer.close(layero);//关闭弹出层
+                                            })
+                                            table.reload('demo',{//重载表格
+                                                page:{
+                                                    curr:1
+                                                }
+                                            })
 
 
                                     }
@@ -206,8 +201,7 @@
 
                         }
                     });
-                }else if(obj.event == 'children_relation'){
-                    window.location = "{{route('agentmembers-children-relation')}}?id="+_id;
+
                 }
             });
         });
@@ -216,8 +210,7 @@
 
     </script>
     <script type="text/html" id="barEdit">
-        <a class="layui-btn layui-btn-xs layui-btn-normal  ajax-form" lay-event="children_relation">下级</a>
-        <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+        {{--<a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>--}}
         <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="remove">删除</a>
         <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="checked">审核</a>
     </script>
