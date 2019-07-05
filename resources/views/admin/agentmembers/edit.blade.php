@@ -2,11 +2,11 @@
 @section('content')
 <div class="layui-card-body">
     <form class="layui-form" action="{{url('agentmembers-save') }}" style="width: 500px;" method="post">
-
+        <input type="hidden" name ="agent_member_id" value="{{$dataInfo->id}}">
         <div class="layui-form-item">
             <label class=" layui-form-label">代理角色：</label>
             <div class="layui-input-block">
-                <select  name="agent_role_id" id="agent_role_id" lay-verify="required">
+                <select  name="agent_role_id" multiple="multiple" class="form-control" id="agent_role_id" lay-verify="required">
                     <option value="0" /> 请选择
                     @foreach($allRoles as $group)
                         <option value="{{ $group->id }}" @if($dataInfo->agent_role_id == $group->id) selected="selected" @endif />{{ $group->agent_name }}
@@ -73,7 +73,7 @@
                 <div class="layui-inline">
                     <label class=" layui-form-label" for="area">选择地区</label>
                     <div class="layui-input-inline">
-                        <select name="state" id="state" onChange="getCityList(this)" lay-filter="state" >
+                        <select name="state" id="state" lay-search lay-filter="state" >
                             <option value="">请选择</option>
                             @foreach($statesInfo as $province)
                                 <option value="{{ $province->ID }}" @if($dataInfo->state_id == $province->ID) selected @endif>{{ $province->STATE_NAME }}</option>
@@ -100,6 +100,17 @@
             <div class="layui-input-block">
                 <input class="layui-input" id="detail_address" name="detail_address" type="text" value="{{ $dataInfo->detail_address }}" lay-verify="required"/>
                 <span class="must-input-tip">*</span>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class=" layui-form-label" for="realname">代理归属</label>
+            <div class="layui-input-block">
+                <select  name="pid" id="pid" lay-search >
+                    <option value="">请选择</option>
+                    @foreach($getAllagents as $key=>$value)
+                        <option value="{{$value['id']}}"  @if($dataInfo->pid == $value['id']) selected @endif >{{$value['userinfo']}}</option>
+                    @endforeach
+                </select>
             </div>
         </div>
         <div class="form-actions">
@@ -132,6 +143,7 @@
                 //监听州与城市的必选
             form.on('select(state)', function(data) {
                 var state_val = data.value;
+                console.log(data)
                 var geturl = "{{ route('agentmembers-getcitylist')}}";
                 $.ajax({
                     type: "get",

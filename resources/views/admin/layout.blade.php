@@ -114,7 +114,7 @@
         </div>
     </div>
 </div>
-<script type="text/javascript" src="/static/admin/layui/layui.js"></script>
+<script type="text/javascript" src="/static/admin/layui/layui.all.js"></script>
 <script type="text/javascript">
     layui.config({
         base: '/static/admin/js/',
