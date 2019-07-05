@@ -140,19 +140,14 @@
                 }else if(obj.event == 'edit'){
                     window.location = "{{route('agentmembers-edit')}}?id="+_id;
                 }else if(obj.event == 'checked'){
-                    layer.prompt({
-                        formType: 2
-                        ,title: '修改 ID 为 ['+ data.id +'] 的用户签名'
-                        ,content:$('#checked_modal')
-                    }, function(value, index){
-                        layer.close(index);
-
-                        //这里一般是发送修改的Ajax请求
-
-                        //同步更新表格和缓存对应的值
-                        obj.update({
-                            sign: value
-                        });
+                    layer.open({
+                        type:3,
+                        title:'审核',
+                        content: $('#checked_modal'),
+                        yes: function(index, layero){
+                            //do something
+                            layer.close(index); //如果设定了yes回调，需进行手工关闭
+                        }
                     });
                 }else if(obj.event == 'children_relation'){
                     window.location = "{{route('agentmembers-children-relation')}}?id="+_id;
