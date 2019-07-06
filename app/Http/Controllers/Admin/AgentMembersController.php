@@ -144,7 +144,8 @@ class AgentMembersController extends Controller
     }
     //删除操作
     public function remove(Request $request){
-        $agent_member_ids = (array)$request->input('id',[]);
+        $agent_member_ids = (string)$request->input('id','');
+        $agent_member_ids = explode(',',$agent_member_ids);
         $param['deleted'] = 1;
         $result = AgentMembersService::update($agent_member_ids,$param,'remove');
         if($result){

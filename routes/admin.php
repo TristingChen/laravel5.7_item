@@ -76,3 +76,13 @@ Route::get('agentmembers/check', 'AgentMembersController@check')->name('agentmem
 Route::get('agentmembers/getcitylist', 'AgentMembersController@getCityList')->name('agentmembers-getcitylist');
 Route::any('agentmembers/children_relation', 'AgentMembersController@children_relation')->name('agentmembers-children-relation');
 Route::any('agentmembers/children_relation_json', 'AgentMembersController@children_relation_json')->name('agentmembers-children-relation-json');
+//资源管理
+Route::any('resourcemanage', 'ResourceManageController@index')->name('resourcemanage');
+Route::any('resourcemanage/index', 'ResourceManageController@index')->name('resourcemanage-index');
+Route::any('resourcemanage/index_json', 'ResourceManageController@index_json')->name('resourcemanage-index-json');
+Route::any('resourcemanage/add', 'ResourceManageController@add')->name('resourcemanage-add');
+Route::any('resourcemanage/edit', 'ResourceManageController@edit')->name('resourcemanage-edit');
+Route::any('resourcemanage/save', 'ResourceManageController@save')->name('resourcemanage-save');
+Route::any('resourcemanage/remove', 'ResourceManageController@remove')->name('resourcemanage-remove');
+Route::get('resourcemanage/check', 'ResourceManageController@check')->name('resourcemanage-checked');
+Route::post('resourcemanage/upload/{type}', 'ResourceManageController@upload')->name('resourcemanage-upload');
