@@ -183,5 +183,22 @@ class AgentMembersController extends Controller
         $child_tree =AgentMembersService::getAllChildren($id);
         echo json_encode($child_tree);
     }
+    //
+    public function role_list(){
+        return view('admin.agentmembers.role_list');
+    }
 
+    public function role_list_json(Request $request){
+        $dataLists = AgentMembersService::getAllRoleLists();
+        return Y::table($dataLists);
+    }
+    public function role_list_add(){
+
+    }
+    public function role_list_edit(){
+
+    }
+    public function role_list_save(){
+
+    }
 }

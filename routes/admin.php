@@ -64,7 +64,7 @@ Route::get('rbac/permission/delete/{id}', 'PermissionController@delete')->name('
  */
 Route::match(['get', 'post'], 'users', 'UserController@index')->name('users');
 
-//外贸会员管理
+//代理管理
 Route::any('agentmembers', 'AgentMembersController@index')->name('agentmembers');
 Route::any('agentmembers/index', 'AgentMembersController@index')->name('agentmembers-index');
 Route::any('agentmembers/index_json', 'AgentMembersController@index_json')->name('agentmembers-index-json');
@@ -72,10 +72,18 @@ Route::get('agentmembers/add', 'AgentMembersController@add')->name('agentmembers
 Route::get('agentmembers/edit', 'AgentMembersController@edit')->name('agentmembers-edit');
 Route::post('agentmembers/save', 'AgentMembersController@save')->name('agentmembers-save');
 Route::get('agentmembers/remove', 'AgentMembersController@remove')->name('agentmembers-remove');
-Route::get('agentmembers/check', 'AgentMembersController@check')->name('agentmembers-check');
+Route::get('agentmembers/check', 'AgentMembersController@check')->name('agentmembers-checked');
 Route::get('agentmembers/getcitylist', 'AgentMembersController@getCityList')->name('agentmembers-getcitylist');
 Route::any('agentmembers/children_relation', 'AgentMembersController@children_relation')->name('agentmembers-children-relation');
 Route::any('agentmembers/children_relation_json', 'AgentMembersController@children_relation_json')->name('agentmembers-children-relation-json');
+//代理角色管理
+Route::any('agentmembers/role_list', 'AgentMembersController@role_list')->name('agentmembers-role-list');
+Route::any('agentmembers/role_list_json', 'AgentMembersController@role_list_json')->name('agentmembers-role-list-json');
+Route::any('agentmembers/role_add', 'AgentMembersController@role_add')->name('agentmembers-role-add');
+Route::any('agentmembers/role_edit', 'AgentMembersController@role_edit')->name('agentmembers-role-edit');
+Route::any('agentmembers/role_save', 'AgentMembersController@role_save')->name('agentmembers-role-save');
+
+
 //资源管理
 Route::any('resourcemanage', 'ResourceManageController@index')->name('resourcemanage');
 Route::any('resourcemanage/index', 'ResourceManageController@index')->name('resourcemanage-index');

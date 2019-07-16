@@ -45,6 +45,10 @@ class ResourceManageController extends Controller{
         $param['content'] = trim($request->input('content'),'');
         $param['fileids'] = trim($request->input('fileids'),'');
         $insertId = DB::table('xc_resource_manage')->insertGetId($param);
+        if($param['fileids']){
+            //更新附件信息表
+            $res = DB::table('xc_resource_files')->whereIn('id',explode(',',$param['fileids']))->update(['resource_id'=>$insertId]);
+        }
         if($insertId){
             return Y::success('保存成功');
         }else{

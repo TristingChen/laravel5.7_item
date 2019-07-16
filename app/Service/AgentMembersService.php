@@ -190,4 +190,10 @@ class AgentMembersService
         $child_tree = generateTree($child_all);
         return $child_tree;
     }
+
+    //获取代理角色的全部信息
+    public static function getAllRoleLists(){
+        $data = DB::table('xc_agent_roles')->get();
+        return $data;
+    }
 }

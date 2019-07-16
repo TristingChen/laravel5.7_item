@@ -102,6 +102,17 @@
                 <span class="must-input-tip">*</span>
             </div>
         </div>
+        <div class="layui-form-item">
+            <label class=" layui-form-label" for="realname">代理归属</label>
+            <div class="layui-input-block">
+                <select  name="pid" id="pid" lay-search >
+                    <option value="">请选择</option>
+                    @foreach($getAllagents as $key=>$value)
+                        <option value="{{$value['id']}}"  @if($dataInfo->pid == $value['id']) selected @endif >{{$value['userinfo']}}</option>
+                    @endforeach
+                </select>
+            </div>
+        </div>
         <div class="form-actions">
             <button type="submit" class="layui-btn layui-btn-normal layui-btn-sm" lay-submit="" lay-filter="form">保 存</button>
             <button type="button" class="layui-btn layui-btn-normal layui-btn-sm" onclick="redirect('{{ url('agentmembers') }}')">取 消</button>
