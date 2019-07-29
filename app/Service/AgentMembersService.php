@@ -193,7 +193,7 @@ class AgentMembersService
 
     //获取代理角色的全部信息
     public static function getAllRoleLists(){
-        $data = DB::table('xc_agent_roles')->get();
+        $data = DB::table('xc_agent_roles')->where('deleted','=',0)->get();
         return $data;
     }
 }
